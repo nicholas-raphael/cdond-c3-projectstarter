@@ -1,7 +1,5 @@
 version: 2.1
 
-commands:
-
 jobs:
   build-frontend:
     docker:
@@ -19,8 +17,6 @@ jobs:
       - save_cache:
         paths: [frontend/node_modules]
         key: frontend-node_modules
-
-
 
 workflows:
   default:
