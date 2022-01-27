@@ -7,16 +7,16 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        keys: [frontend-node_modules]
+          keys: [frontend-node_modules]
       - run:
-        name: Build front-end 
-        command: |
-          cd frontend
-          npm install 
-          npm run build
+          name: Build front-end 
+          command: |
+            cd frontend
+            npm install 
+            npm run build
       - save_cache:
-        paths: [frontend/node_modules]
-        key: frontend-node_modules
+          paths: [frontend/node_modules]
+          key: frontend-node_modules
 
 workflows:
   default:
