@@ -20,7 +20,7 @@
 
     - name: "install pip"
       become: true
-      raw: pip3 install --no-cache --upgrade pip setuptools
+      raw: pip install --no-cache --upgrade pip setuptools
 
     - name: "install python for Ansible."
       become: true
