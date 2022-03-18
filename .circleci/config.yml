@@ -158,7 +158,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible awscli
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+            apk add --update ansible
             yum install -y tar gzip
 
       - run:
