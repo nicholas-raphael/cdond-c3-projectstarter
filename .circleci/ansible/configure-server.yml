@@ -18,14 +18,6 @@
         delay: 300
         timeout: 540
 
-    - name: "install python"
-      become: true
-      raw: apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-
-    - name: "install python, step 2"
-      become: true
-      raw: python3 -m ensurepip
-
     - name: "install pip"
       become: true
       raw: pip3 install --no-cache --upgrade pip setuptools
