@@ -204,6 +204,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            cd backend
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to memstash
@@ -224,12 +225,9 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            apk add --update awscli
+            sudo apt-get update
+            sudo apt-get install awscli
             aws --version
-      - run:
-          name: Install ansible
-          command: |
-            apk add --update ansible
       - run:
           name: Get backend url
           command: |
@@ -270,5 +268,8 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+
 
 
