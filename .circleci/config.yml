@@ -185,13 +185,14 @@ jobs:
 
   run-migrations:
     docker:
-      - image: node:13.8-slim
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run: 
           name: Install aws cli for destroy env command
           command: |  
-            apk add --update awscli
+            sudo apt-get update
+            sudo apt-get install awscli
             aws --version
       - run:
           name: Run migrations
