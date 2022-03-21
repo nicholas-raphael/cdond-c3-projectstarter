@@ -172,7 +172,7 @@ jobs:
 
   run-migrations:
     docker:
-      -image: node:13.8-slim
+      - image: node:13.8-slim
     steps:
       - checkout
       - run: 
