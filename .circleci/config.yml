@@ -198,15 +198,8 @@ jobs:
           name: install dependencies
           command: |
             cd backend
-            npm config delete proxy
+            npm i -g npm@latest
             npm install
-      - run:
-            name: install to solve problems
-            command: |
-              cd backend
-              npm install @nestjs/common@8.4.2
-              npm install --save-dev @types/jest@27.4.1
-              npm install --save-dev jest@27.5.1
       - run:
           name: audit & fix
           command: | 
