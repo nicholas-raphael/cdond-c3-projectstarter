@@ -203,8 +203,8 @@ jobs:
       - run:
           name: audit
           command: | 
-          cd backend
-          npm audit fix
+            cd backend
+            npm audit fix
       - run:
           name: build and migrations
           command: |
