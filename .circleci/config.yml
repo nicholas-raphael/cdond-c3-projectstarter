@@ -198,7 +198,7 @@ jobs:
           name: install dependencies
           command: |
             cd backend
-            npm i -g npm@latest
+            npm install npm@latest
             npm install
       - run:
           name: audit & fix
