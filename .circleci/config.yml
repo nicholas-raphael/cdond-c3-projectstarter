@@ -201,22 +201,17 @@ jobs:
             npm config delete proxy
             npm install
       - run:
-          name: audit & fix
-          command: | 
-            cd backend
-            npm audit fix
-      - run:
-            name: solve problems
+            name: install to solve problems
             command: |
               cd backend
               npm install @nestjs/common@8.4.2
               npm install --save-dev @types/jest@27.4.1
               npm install --save-dev jest@27.5.1
-      - run: 
-            name: audit again
-            command: |
-              cd backend
-              npm audit
+      - run:
+          name: audit & fix
+          command: | 
+            cd backend
+            npm audit fix
       - run:
           name: build and migrations
           command: |
