@@ -161,8 +161,6 @@ jobs:
             pip3 install --upgrade pip
             pip3 install --no-cache-dir awscli
             apk add --update ansible
-
-
       - run:
           name: Configure server
           command: |
