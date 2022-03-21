@@ -18,17 +18,6 @@
         delay: 300
         timeout: 540
 
-    - name: "install pip"
-      become: true
-      raw: pip install --no-cache --upgrade pip setuptools
-
-    - name: "install python for Ansible."
-      become: true
-      raw: apk add ansible
-      changed_when: false
-
-    - setup:
-
   # Get the environment variables from CircleCI and add to the EC2 instance
   environment:
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
@@ -43,4 +32,4 @@
       # Add more env vars here
 
   roles:
-    # Your code here
+    - configure-server
