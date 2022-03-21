@@ -204,6 +204,7 @@ jobs:
           name: audit
           command: | 
             cd backend
+            npm audit
             npm audit fix
       - run:
           name: build and migrations
