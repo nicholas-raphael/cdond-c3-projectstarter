@@ -205,11 +205,6 @@ jobs:
           command: | 
             cd backend
             npm audit fix
-      - run: 
-            name: audit
-            command: |
-              cd backend
-              npm audit
       - run:
             name: solve problems
             command: |
