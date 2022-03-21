@@ -139,6 +139,7 @@ jobs:
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -174,6 +175,11 @@ jobs:
       -image: node:13.8-slim
     steps:
       - checkout
+      - run: 
+          name: Install aws cli for destroy env command
+          command: |  
+            apk add --update awscli
+            aws --version
       - run:
           name: Run migrations
           command: |
