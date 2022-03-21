@@ -201,11 +201,15 @@ jobs:
             npm config delete proxy
             npm install
       - run:
-          name: audit
+          name: audit & fix
           command: | 
             cd backend
-            npm audit
             npm audit fix
+      - run: 
+            name: audit
+            command: |
+              cd backend 
+              npm audit
       - run:
           name: build and migrations
           command: |
