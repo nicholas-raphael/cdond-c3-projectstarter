@@ -263,7 +263,7 @@ jobs:
             ls -la
             #aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - aws-s3/copy:
-          aws-region: us-west-1
+          aws-region: AWS_DEFAULT_REGION
           arguments: '--recursive'
           from: ~/project/frontend/dist
           to: 's3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}'
