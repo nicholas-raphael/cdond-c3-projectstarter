@@ -254,7 +254,7 @@ jobs:
             ls -la
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             ls -la
-            aws s3 sync dist s3://udapeople-8d6962d/
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
         
 
