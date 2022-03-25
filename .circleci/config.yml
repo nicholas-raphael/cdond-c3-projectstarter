@@ -27,7 +27,8 @@ commands:
             # Your code here
             cd backend
             rm migrations_dump.txt
-
+orbs:
+  aws-s3: circleci/aws-s3@3.0
 jobs:
   build-frontend:
     docker:
@@ -231,9 +232,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install job dependencies
           command: |
             sudo apt-get -y -qq update
+            sudo apt-get -y update
+            sudo apt -y install curl tar gzip
             sudo apt-get -qq install awscli
             aws --version
       - run:
@@ -245,18 +248,61 @@ jobs:
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> .env
+
+        - run:
+            name: Install back dependencies
+            command: |
+              cd frontend
+              npm install
+              npm run build
       - run:
-          name: Deploy frontend objects
+          name: Create tar file
           command: |
             cd frontend
-            npm install
-            npm run build
             ls -la
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             ls -la
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            #aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - aws-s3/copy:
+          aws-region: us-west-1
+          arguments: '--recursive'
+          from: ~/project/frontend/dist
+          to: 's3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}'
+
+
       - destroy-environment
-        
+      
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - add_ssh_keys:
+          fingerprints: ["3c:f0:fe:3c:84:53:b5:52:ea:32:f7:da:65:d3:dc:28"]
+      - attach_workspace: #Attach the "workspace" to the job so that you have access to all the files you need (e.g. inventory file).
+          at: ~/
+      - run:
+          name: install job dependencies
+          command: |
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+            apk add --update ansible
+      - run:
+          name: install back dependencies
+          command: |
+            cd backend
+            npm install
+            npm run build
+      - run:
+          name: create tar file
+          command: |
+            tar -C backend -czvf artifact.tar.gz .
+      - run:
+          name: Run ansible file
+          command: |
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
 
 workflows:
   default:
