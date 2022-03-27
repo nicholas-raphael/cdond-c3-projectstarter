@@ -247,6 +247,7 @@ jobs:
             echo "BACK IP: ${BACKEND_IP}"
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+            echo "${AWS_DEFAULT_REGION}"
             echo API_URL="http://${BACKEND_IP}:3030" >> .env
       - run:
           name: Install back dependencies
@@ -265,7 +266,7 @@ jobs:
             ls -la
             #aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - aws-s3/copy:
-          aws-region: AWS_DEFAULT_REGION
+          aws-region: ${AWS_DEFAULT_REGION}
           arguments: '--recursive --debug'
           from: ~/project/frontend/dist
           to: 's3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}'
