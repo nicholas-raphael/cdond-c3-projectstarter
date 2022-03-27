@@ -138,6 +138,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
+              --region=us-west-1 \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
@@ -146,6 +147,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=udapeople \
+              --region=us-west-1 \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
 
@@ -237,6 +239,7 @@ jobs:
             sudo apt-get -y -qq update
             sudo apt-get -y update
             sudo apt -y install curl tar gzip
+            sudo apt-get -y -qq install python3
             sudo apt-get -qq install awscli
             aws --version
       - run:
@@ -255,18 +258,9 @@ jobs:
             cd frontend
             npm install
             npm run build
-      - run:
-          name: Create tar file
-          command: |
-            cd frontend
-            ls -la
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            ls -la
-            cd dist
-            ls -la
-            #aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            cat ./dist/index.html
       - aws-s3/copy:
-          aws-region: ${AWS_DEFAULT_REGION}
+          aws-region: AWS_DEFAULT_REGION
           arguments: '--recursive --debug'
           from: ~/project/frontend/dist
           to: 's3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}'
