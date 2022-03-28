@@ -259,13 +259,11 @@ jobs:
             npm install
             npm run build
             cat ./dist/index.html
-      - aws-s3/copy:
-          aws-region: AWS_DEFAULT_REGION
-          arguments: '--recursive --debug'
-          from: ~/project/frontend/dist
-          to: 's3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}'
-
-
+      
+      - run:
+          name: copy local files to s3
+          command: |
+            aws s3 cp /root/project/frontend/dist/ s3://udapeople-$CIRCLE_WORKFLOW_ID/ --recursive
       - destroy-environment
       
   deploy-backend:
