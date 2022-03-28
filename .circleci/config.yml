@@ -270,7 +270,7 @@ jobs:
       - image: python:3.7-alpine3.11
     steps:
       - add_ssh_keys:
-          fingerprints: ["3c:f0:fe:3c:84:53:b5:52:ea:32:f7:da:65:d3:dc:28"]
+          fingerprints: ["cf:08:97:6a:61:c9:84:68:f7:bd:63:ea:f6:cb:7e:54"]
       - attach_workspace: #Attach the "workspace" to the job so that you have access to all the files you need (e.g. inventory file).
           at: ~/
       - run:
@@ -279,16 +279,6 @@ jobs:
             pip3 install --upgrade pip
             pip3 install --no-cache-dir awscli
             apk add --update ansible
-      - run:
-          name: install back dependencies
-          command: |
-            cd backend
-            npm install
-            npm run build
-      - run:
-          name: create tar file
-          command: |
-            tar -C backend -czvf artifact.tar.gz .
       - run:
           name: Run ansible file
           command: |
