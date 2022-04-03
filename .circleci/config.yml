@@ -12,26 +12,26 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            if aws s3 ls | grep udapeople-<<parameters.workflow_id>>; then
-              aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
+            if aws s3 ls | grep udapeople-<<parameters.workflow-id>>; then
+              aws s3 rm s3://udapeople-<<parameters.workflow-id>> --recursive
             fi
             aws cloudformation delete-stack --stack-name frontend-<<workflow-id>>
             aws cloudformation delete-stack --stack-name backend-<<workflow-id>>
 
       - revert-migrations:
-          workflow_id: <<parameters.workflow_id>>
+          workflow-id: <<parameters.workflow-id>>
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      workflow_id:
+      workflow-id:
         type: string
     steps:
       - run:
           name: Revert migrations
           when: on_fail
           command: |
-            status=$(curl --insecure --request GET https://kvdb.io/Pi4Ly4ktw7LcDJDRuaQtMn/migration-<<parameters.workflow_id>>)
+            status=$(curl --insecure --request GET https://kvdb.io/Pi4Ly4ktw7LcDJDRuaQtMn/migration-<<parameters.workflow-id>>)
             echo $status
             if [[ "${status}" == 1 ]]; then
               npm run migrations:revert
