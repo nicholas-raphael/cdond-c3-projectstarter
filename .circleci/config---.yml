@@ -1,0 +1,35 @@
+version: 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@3.0
+jobs:
+  save-files:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: Install job dependencies
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get -y update
+            sudo apt -y install curl tar gzip
+            sudo apt-get -y -qq install python3
+            sudo apt-get -qq install awscli
+            aws --version
+      - run:
+          name: Install back dependencies
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            cat ./dist/index.html
+      - run:
+          name: Copy files to s3
+          command: |
+            aws s3 cp ~/project/frontend/dist/ s3://udapeople-999/ --recursive
+
+workflows:
+  default:
+    jobs:
+      - save-files
