@@ -101,9 +101,26 @@ jobs:
             cd backend
             npm install
       - run:
+          name: create .env file
+          command: |
+            cd backend
+            touch .env
+            ENVIRONMENT=production > .env
+            VERSION=1 > .env
+            TYPEORM_CONNECTION=postgres > .env
+            TYPEORM_MIGRATIONS_DIR=./src/migrations
+            TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts > .env
+            TYPEORM_MIGRATIONS=./src/migrations/*.ts > .env
+            TYPEORM_HOST=${TYPEORM_HOST} > .env
+            TYPEORM_PORT=${TYPEORM_PORT} > .env
+            TYPEORM_USERNAME=${TYPEORM_USERNAME} > .env
+            TYPEORM_PASSWORD=${TYPEORM_PASSWORD} > .env
+            TYPEORM_DATABASE=${TYPEORM_DATABASE} > .env
+      - run:
           name: Build back-end
           command: |
             cd backend
+            cat .env
             npm run build
       - save_cache:
           paths: [backend/node_modules]
@@ -310,6 +327,47 @@ jobs:
       - destroy-environment:
           workflow-id: "${CIRCLE_WORKFLOW_ID}"
 
+  smoke-test:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependancies
+          command: |
+            apk add curl tar gzip
+            pip install awscli
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Frontend smoke test
+          command: |
+            URL="http://udapeople-bcee3ce.s3-website.us-east-2.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+              return 1
+            else
+              return 1
+            fi
+      - run:
+          name: Backend smoke test
+          command: |
+            aws ec2 describe-instances \
+              --region us-east-2 \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text > BACKEND_IP
+            testback=$(curl -I 'http://$BACKEND_IP:3030' 2>/dev/null)
+            cat BACKEND_IP
+            cat $testback
+            if $(grep -qi "200 OK" $testback);
+            then
+              echo "Success backend smoke"
+              return 0
+            else
+              echo "Fail backend smoke"
+              cat testback
+              return 1
 workflows:
   default:
     jobs:
@@ -325,6 +383,9 @@ workflows:
           requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend,scan-frontend,test-backend,scan-backend]
+          filters:
+            branches:
+              only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
@@ -332,7 +393,9 @@ workflows:
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
-          requires: [deploy-frontend]
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-frontend, deploy-backend]
 
 
 

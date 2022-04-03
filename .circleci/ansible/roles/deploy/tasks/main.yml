@@ -10,6 +10,13 @@
   shell: |
     cd /home/ubuntu
     tar xvzf artifact.tar.gz -C .
+
+- name: npm install 
+  become: true
+  shell: |
+    cd /home/ubuntu
+    npm install
+
 - name: start server
   become: true
   shell: |
