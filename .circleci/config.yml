@@ -195,7 +195,7 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment
+      - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
 
   run-migrations:
@@ -235,9 +235,8 @@ jobs:
             https://kvdb.io/Pi4Ly4ktw7LcDJDRuaQtMn/migration_${CIRCLE_WORKFLOW_ID:0:7}
 
             echo ${result}
-      - destroy-environment
+      - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations
 
   deploy-frontend:
     docker:
@@ -276,8 +275,8 @@ jobs:
           name: copy local files to s3
           command: |
             aws s3 cp ~/project/frontend/dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
-      - destroy-environment
-      - revert-migrations
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
       
   deploy-backend:
     docker:
@@ -308,8 +307,8 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
 
-      - destroy-environment
-      - revert-migrations
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
 
 workflows:
   default:
