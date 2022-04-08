@@ -353,12 +353,9 @@ jobs:
       - run:
           name: Backend smoke test
           command: |
-            aws ec2 describe-instances \
-              --region us-east-2 \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text > BACKEND_IP
-            cat BACKEND_IP
-            URL_BACK="http://$BACKEND_IP:3030/api/status"
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo "BACK IP: ${BACKEND_IP}"
+            URL_BACK="http://${BACKEND_IP}:3030/api/status"
             echo ${URL_BACK}
             curl ${URL_BACK}
       - destroy-environment:
