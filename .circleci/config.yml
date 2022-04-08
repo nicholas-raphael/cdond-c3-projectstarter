@@ -116,10 +116,6 @@ jobs:
             echo TYPEORM_USERNAME=${TYPEORM_USERNAME} >> .env
             echo TYPEORM_PASSWORD=${TYPEORM_PASSWORD} >> .env
             echo TYPEORM_DATABASE=${TYPEORM_DATABASE} >> .env
-      - persist_to_workspace:
-          root: ~/project/
-          paths:
-            - project/backend/.env
       - run:
           name: Build back-end
           command: |
