@@ -316,8 +316,8 @@ jobs:
             pip3 install --upgrade pip
             pip3 install --no-cache-dir awscli
             apk add --update ansible
-      - run: check .env
-          name: check .env
+      - run: check env
+          name: check env
           command: |
             cd ~/project/backend
             cat .env
