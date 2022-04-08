@@ -407,7 +407,11 @@ jobs:
               # your code here
               aws cloudformation delete-stack --stack-name frontend-${OldWorkflowID}
               aws cloudformation delete-stack --stack-name backend-${OldWorkflowID}
-              aws s3 rb s3://udapeople-${OldWorkflowID} --force
+
+              if aws s3 ls | grep udapeople-${OldWorkflowID}; then
+                aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
+              fi
+              
             fi
 
 
