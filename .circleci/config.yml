@@ -358,7 +358,9 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text > BACKEND_IP
             cat BACKEND_IP
-            curl http://$BACKEND_IP:3030/api/status
+            URL_BACK="http://$BACKEND_IP:3030/api/status"
+            echo ${URL_BACK}
+            curl ${URL_BACK}
       - destroy-environment:
           workflow-id: "${CIRCLE_WORKFLOW_ID}"
 
