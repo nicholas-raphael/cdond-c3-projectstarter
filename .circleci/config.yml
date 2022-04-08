@@ -311,12 +311,7 @@ jobs:
           command: |
             pip3 install --upgrade pip
             pip3 install --no-cache-dir awscli
-            apk add --update ansible
-      - run:
-          name: check env
-          command: |
-            cd ~/project/backend
-            cat .env
+            apk add --update ansible curl
       - run:
           name: compress backend
           command: |
