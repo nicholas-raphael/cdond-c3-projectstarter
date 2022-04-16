@@ -66,7 +66,7 @@ jobs:
           command: 
             ls -la
       - persist_to_workspace:
-          root: /project/workflows
+          root: ~/project/workflows
           paths:
             - last_workflow_id.txt
 
@@ -80,7 +80,7 @@ jobs:
           command:
             yum install -y tar gzip
       - attach_workspace:
-          at: /project/workflows
+          at: ~/project/workflows
       - run:
           name: where am i
           command: 
