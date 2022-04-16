@@ -40,6 +40,43 @@ commands:
 orbs:
   aws-s3: circleci/aws-s3@3.0
 jobs:
+
+  attach-workspace:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: where am i
+          command: 
+            ls -la
+      - run: 
+          name: create folder and file
+          command:
+            mkdir workflows
+            cd workflows
+            touch last_workflow_id.txt
+            aws cloudformation list-exports --region us-east-2 --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text >> last_workflow_id.txt
+            cat last_workflow_id.txt
+      - persist_to_workspace:
+          root: workflows
+          paths:
+            - last_workflow_id.txt
+
+  get-from-workspace:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workflows
+      - run:
+          name: get from workspace
+          command: |
+            cd workflows 
+            cat last_workflow_id.txt
+            return 1
+
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -395,19 +432,16 @@ jobs:
             # your code here
             export OldWorkflowID=$(aws cloudformation list-exports --region us-east-2 --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
             echo $OldWorkflowID
+            echo $CIRCLE_WORKFLOW_ID:0:7
       - run:
           name: Remove old stacks and files
           command: |
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
               # your code here
+              aws s3 rb s3://udapeople-${OldWorkflowID} --force
               aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
               aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
-
-              if aws s3 ls | grep udapeople-${OldWorkflowID}; then
-                aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
-              fi
-              
             fi
 
 
@@ -415,6 +449,8 @@ jobs:
 workflows:
   default:
     jobs:
+      - attach-workspace
+      - get-from-workspace
       - build-frontend
       - build-backend
       - test-frontend:
