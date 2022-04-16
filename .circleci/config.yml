@@ -97,10 +97,6 @@ jobs:
             cat last_workflow_id.txt
             export TEST=$(head -n 1 last_workflow_id.txt)
             echo $TEST
-            aws s3 rb s3://udapeople-d9e01d7 --region us-east-2 --force
-            aws cloudformation delete-stack --region us-east-2 --stack-name udapeople-frontend-d9e01d7
-            aws cloudformation delete-stack --region us-east-2 --stack-name udapeople-backend-d9e01d7
-            return 1
 
   build-frontend:
     docker:
@@ -471,9 +467,9 @@ jobs:
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
               # your code here
-              aws s3 rb s3://udapeople-${OldWorkflowID} --force
-              aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
+              aws s3 rb s3://udapeople-${OldWorkflowID} --region us-east-2 --force
+              aws cloudformation delete-stack --region us-east-2 --stack-name udapeople-frontend-${OldWorkflowID}
+              aws cloudformation delete-stack --region us-east-2 --stack-name udapeople-backend-${OldWorkflowID}
             fi
 
 
