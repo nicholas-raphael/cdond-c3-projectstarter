@@ -53,11 +53,11 @@ jobs:
             export T=$(head -n 1 test-s3.txt)
             echo $T
             aws s3 rb s3://udapeople-${T} --region us-east-2 --force
-            return 1
       - run:
           name: where am i
           command: 
             ls -la
+            return 1
       - run: 
           name: create folder and file
           command: |
