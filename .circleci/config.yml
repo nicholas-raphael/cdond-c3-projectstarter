@@ -49,7 +49,7 @@ jobs:
       - run:
           name: install tar
           command:
-            yum install -y tar
+            yum install -y tar gzip
       - run:
           name: where am i
           command: 
@@ -75,7 +75,7 @@ jobs:
       - run:
           name: install tar
           command:
-            yum install -y tar
+            yum install -y tar gzip
       - attach_workspace:
           at: /workflows
       - run:
