@@ -12,11 +12,11 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name backend-<<parameters.workflow-id>>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow-id>>
             if aws s3 ls | grep udapeople-<<parameters.workflow-id>>; then
               aws s3 rm s3://udapeople-<<parameters.workflow-id>> --recursive
             fi
-            aws cloudformation delete-stack --stack-name frontend-<<parameters.workflow-id>>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow-id>>
 
       - revert-migrations:
           workflow-id: <<parameters.workflow-id>>
@@ -97,6 +97,10 @@ jobs:
             cat last_workflow_id.txt
             export TEST=$(head -n 1 last_workflow_id.txt)
             echo $TEST
+            aws s3 rb s3://udapeople-d9e01d7 --region us-east-2 --force
+            aws cloudformation delete-stack --region us-east-2 --stack-name udapeople-frontend-d9e01d7
+            aws cloudformation delete-stack --region us-east-2 --stack-name udapeople-backend-d9e01d7
+            return 1
 
   build-frontend:
     docker:
