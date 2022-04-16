@@ -443,8 +443,11 @@ jobs:
       # Docker image here
       - image: amazon/aws-cli
     steps:
-      # Checkout code from git
       - checkout
+      - run:
+          name: install tar
+          command:
+            yum install -y tar gzip
       - attach_workspace:
           at: ~/project/workflows
       - run:
