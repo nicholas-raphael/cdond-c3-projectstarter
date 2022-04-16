@@ -79,6 +79,10 @@ jobs:
       - attach_workspace:
           at: /workflows
       - run:
+          name: where am i
+          command: 
+            ls -la
+      - run:
           name: get from workspace
           command: |
             cd workflows 
