@@ -97,8 +97,6 @@ jobs:
             cat last_workflow_id.txt
             export TEST=$(head -n 1 last_workflow_id.txt)
             echo $TEST
-            aws s3 rb s3://udapeople-${TEST} --region us-east-2 --force --debug
-            return 1
 
   build-frontend:
     docker:
@@ -511,5 +509,3 @@ workflows:
           requires: [deploy-frontend, deploy-backend]
       - cloudfront-update:
           requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
