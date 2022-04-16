@@ -77,7 +77,7 @@ jobs:
           command:
             yum install -y tar gzip
       - attach_workspace:
-          at: /workflows
+          at: /project/workflows
       - run:
           name: where am i
           command: 
