@@ -450,12 +450,12 @@ workflows:
   default:
     jobs:
       - attach-workspace
-      - get-from-workspace
-        requires: [attach-workspace]
-      - build-frontend
-        requires: [get-from-workspace]
-      - build-backend
-        requires: [get-from-workspace]
+      - get-from-workspace:
+          requires: [attach-workspace]
+      - build-frontend:
+          requires: [get-from-workspace]
+      - build-backend:
+          requires: [get-from-workspace]
       - test-frontend:
           requires: [build-frontend]
       - scan-frontend:
