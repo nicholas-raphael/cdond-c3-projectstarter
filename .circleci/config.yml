@@ -95,6 +95,8 @@ jobs:
           command: |
             cd workflows 
             cat last_workflow_id.txt
+            export TEST=$(head -n 1 last_workflow_id.txt)
+            echo $TEST
             return 1
 
   build-frontend:
@@ -418,7 +420,6 @@ jobs:
       - destroy-environment:
           workflow-id: "${CIRCLE_WORKFLOW_ID}"
 
-
   cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
@@ -438,7 +439,6 @@ jobs:
               --stack-name udapeople-cloudfront \
               --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
 
-
   cleanup:
     docker:
       # Docker image here
@@ -446,6 +446,17 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/project/workflows
+      - run:
+          name: where am i
+          command: 
+            ls -la
+      - run:
+          name: get from workspace
+          command: |
+            cd workflows 
+            cat last_workflow_id.txt
       - run:
           name: Get old stack workflow id
           command: |
