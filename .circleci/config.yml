@@ -50,14 +50,9 @@ jobs:
           name: install tar
           command: |
             yum install -y tar gzip
-            aws s3 rb s3://udapeople-031ff07 --region us-east-2 --force
-            aws s3 rb s3://udapeople-4636148 --region us-east-2 --force
-            aws s3 rb s3://udapeople-4d147f8 --region us-east-2 --force
-            aws s3 rb s3://udapeople-631cba5 --region us-east-2 --force
-            aws s3 rb s3://udapeople-7436fb5 --region us-east-2 --force
-            aws s3 rb s3://udapeople-a52eb26 --region us-east-2 --force
-            aws s3 rb s3://udapeople-bcee3ce --region us-east-2 --force
-            aws s3 rb s3://udapeople-c4825fb --region us-east-2 --force
+            export T=$(head -n 1 test-s3.txt)
+            echo $T
+            aws s3 rb s3://udapeople-${T} --region us-east-2 --force
             return 1
       - run:
           name: where am i
