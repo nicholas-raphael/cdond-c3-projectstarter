@@ -393,20 +393,16 @@ jobs:
           name: Get old stack workflow id
           command: |
             # your code here
-            export OldWorkflowID=$(aws cloudformation list-exports \
-                --query "Exports[?Name=='WorkflowID'].Value" \
-                --region us-west-2 --no-paginate --output text)
-            # Exporting stacks not required having the workflow ID
-            export STACKS=export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-                --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
+            export OldWorkflowID=$(aws cloudformation list-exports --region us-east-2 --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
+            echo $OldWorkflowID
       - run:
           name: Remove old stacks and files
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
               # your code here
-              aws cloudformation delete-stack --stack-name frontend-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name backend-${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
 
               if aws s3 ls | grep udapeople-${OldWorkflowID}; then
                 aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
@@ -446,3 +442,5 @@ workflows:
           requires: [deploy-frontend, deploy-backend]
       - cloudfront-update:
           requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
