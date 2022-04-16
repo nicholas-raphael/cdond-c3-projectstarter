@@ -58,10 +58,13 @@ jobs:
           name: create folder and file
           command: |
             mkdir workflows
-            cd workflows
-            touch last_workflow_id.txt
-            aws cloudformation list-exports --region us-east-2 --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text >> last_workflow_id.txt
-            cat last_workflow_id.txt
+            touch workflows/last_workflow_id.txt
+            aws cloudformation list-exports --region us-east-2 --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text >> workflows/last_workflow_id.txt
+            cat workflows/last_workflow_id.txt
+      - run:
+          name: where am i
+          command: 
+            ls -la
       - persist_to_workspace:
           root: /project/workflows
           paths:
