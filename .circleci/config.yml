@@ -63,7 +63,7 @@ jobs:
             aws cloudformation list-exports --region us-east-2 --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text >> last_workflow_id.txt
             cat last_workflow_id.txt
       - persist_to_workspace:
-          root: workflows
+          root: /project/workflows
           paths:
             - last_workflow_id.txt
 
