@@ -52,7 +52,7 @@ jobs:
             ls -la
       - run: 
           name: create folder and file
-          command:
+          command: |
             mkdir workflows
             cd workflows
             touch last_workflow_id.txt
