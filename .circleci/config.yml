@@ -455,16 +455,13 @@ jobs:
           command: 
             ls -la
       - run:
-          name: Get old stack workflow id
-          command: | 
+          name: Remove old stacks and files
+          command: |
             cat workflows/last_workflow_id.txt
             export OldWorkflowID=$(head -n 1 workflows/last_workflow_id.txt)
             echo $OldWorkflowID
             echo "${OldWorkflowID}"
             echo ${CIRCLE_WORKFLOW_ID:0:7}
-      - run:
-          name: Remove old stacks and files
-          command: |
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
               # your code here
