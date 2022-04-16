@@ -84,7 +84,7 @@ jobs:
             ls -la
       - run:
           name: where am i
-          command:
+          command: |
             cd ..
             ls -la
       - run:
