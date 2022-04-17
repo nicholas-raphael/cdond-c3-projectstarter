@@ -240,6 +240,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
+            --region us-east-2 --filters "Name=tag-key,Values=project" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
@@ -332,7 +333,7 @@ jobs:
           name: Get backend url
           command: |
             cd frontend
-            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export BACKEND_IP=$(aws ec2 describe-instances --region us-east-2 --filters "Name=tag-key,Values=project" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "BACK IP: ${BACKEND_IP}"
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
@@ -411,7 +412,7 @@ jobs:
       - run:
           name: Backend smoke test
           command: |
-            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export BACKEND_IP=$(aws ec2 describe-instances --region us-east-2 --filters "Name=tag-key,Values=project" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "BACK IP: ${BACKEND_IP}"
             URL_BACK="http://${BACKEND_IP}:3030/api/status"
             echo ${URL_BACK}
